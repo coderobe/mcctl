@@ -18,6 +18,10 @@ def expand_devid(manager, args)
       puts "Is mconnect running?"
       err_bail(device)
     end
+    if device.as(Array).size < 1
+      err_bail("No devices found")
+    end
+
     device.as(Array).first.as(String).split("/").last
   end
   device_prefix = "/org/mconnect/device/"
@@ -42,6 +46,7 @@ cli = Commander::Command.new do |cmd|
 
       devices.each do |device|
         if device.is_a?(String)
+          puts "Is mconnect running?"
           err_bail(device)
         end
 

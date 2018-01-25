@@ -10,7 +10,7 @@ all: bin/mcctl
 
 .PHONY: install
 install:
-	install -Dm755 mcctl "$(DESTDIR)/usr/bin/mcctl"
+	install -Dm755 bin/mcctl "$(DESTDIR)/usr/bin/mcctl"
 
 .PHONY: uninstall
 uninstall:

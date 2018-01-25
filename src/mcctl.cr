@@ -6,9 +6,19 @@ bus = DBus::Bus.new
 mconnect = bus.destination("org.mconnect")
 device_manager = mconnect.object("/org/mconnect/manager").interface("org.mconnect.DeviceManager")
 
+def err_bail(msg)
+  puts msg
+  exit 1
+end
+
 def expand_devid(manager, args)
   if args.size < 1
-    args << manager.call("ListDevices").reply.first.as(Array).first.as(String).split("/").last
+    device = manager.call("ListDevices").reply.first
+    if device.is_a?(String)
+      puts "Is mconnect running?"
+      err_bail(device)
+    end
+    device.as(Array).first.as(String).split("/").last
   end
   device_prefix = "/org/mconnect/device/"
   device = args.first
@@ -28,7 +38,13 @@ cli = Commander::Command.new do |cmd|
     cmd.short = "list available devices"
     cmd.long = cmd.short
     cmd.run do |options, arguments|
-      device_manager.call("ListDevices").reply.each do |device|
+      devices = device_manager.call("ListDevices").reply
+
+      devices.each do |device|
+        if device.is_a?(String)
+          err_bail(device)
+        end
+
         path = device.as(Array).first.as(String)
         device_interface = mconnect.object(path)
         device_properties = device_interface.propRetriever("org.mconnect.Device")
@@ -75,6 +91,9 @@ cli = Commander::Command.new do |cmd|
     cmd.short = "share text to the device"
     cmd.long = cmd.short + ", <device> defaults to the first device if none given"
     cmd.run do |options, arguments|
+      if arguments.size < 1
+        err_bail("Missing arguments")
+      end
       text = arguments.shift
       device = expand_devid(device_manager, arguments)
       device_interface = mconnect.object(device)
@@ -88,6 +107,9 @@ cli = Commander::Command.new do |cmd|
     cmd.short = "share url to the device"
     cmd.long = cmd.short + ", <device> defaults to the first device if none given"
     cmd.run do |options, arguments|
+      if arguments.size < 1
+        err_bail("Missing arguments")
+      end
       url = arguments.shift
       device = expand_devid(device_manager, arguments)
       device_interface = mconnect.object(device)
@@ -101,6 +123,9 @@ cli = Commander::Command.new do |cmd|
     cmd.short = "share a file to the device"
     cmd.long = cmd.short + ", <device> defaults to the first device if none given"
     cmd.run do |options, arguments|
+      if arguments.size < 1
+        err_bail("Missing arguments")
+      end
       file = arguments.shift
       device = expand_devid(device_manager, arguments)
       device_interface = mconnect.object(device)

@@ -1,0 +1,10 @@
+version: 1.0
+shards:
+  commander:
+    github: mrrooijen/commander
+    version: 0.3.3
+
+  dbus:
+    github: coderobe/crystal-dbus
+    commit: e30023aac3bdd726391b1fd60f3593496d8ca017
+

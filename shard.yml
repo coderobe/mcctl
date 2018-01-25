@@ -1,0 +1,19 @@
+name: mcctl
+version: 1.0.0
+
+authors:
+  - Robin Broda <robin@broda.me>
+
+targets:
+  mcctl:
+    main: src/mcctl.cr
+
+dependencies:
+  dbus:
+    github: coderobe/crystal-dbus
+  commander:
+    github: mrrooijen/commander
+
+crystal: 0.24.1
+
+license: LGPLv3

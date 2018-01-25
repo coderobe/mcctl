@@ -22,7 +22,7 @@ def expand_devid(manager, args)
       err_bail("No devices found")
     end
 
-    device.as(Array).first.as(String).split("/").last
+    args << device.as(Array).first.as(String).split("/").last
   end
   device_prefix = "/org/mconnect/device/"
   device = args.first
